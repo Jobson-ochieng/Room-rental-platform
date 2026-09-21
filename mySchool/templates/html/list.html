@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>credentials</title>
+</head>
+<form method='post'>
+{% for list in lists %}
+<p>Phone:{{list.phone}}</p>
+<p>Room:{{list.room}}</p>
+<p>Name:{{list.name}}</p>
+{% endfor %}
+<button type='submit'>save</button>
+</form>
+<body>
+  
+</body>
+
+</html>

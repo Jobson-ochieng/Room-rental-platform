@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students</title>
+</head>
+
+<body>
+
+    <h1>Our Students</h1>
+    <form method='post' action='{% url 'logout' %}'>
+    {% csrf_token %}
+    <button type='submit'>logout</button>
+    </form>
+    {% for student in students %}
+
+        <h2>{{ student.name }}</h2>
+        <p>Age: {{ student.age }}</p>
+        <p>Course: {{ student.course }}</p>
+        <a href="{% url 'student_update' student.id %}">
+        Edit
+        </a>
+       <a href="{%url 'students_delete' student.id %}">delete</a>
+        <hr>
+
+    {% endfor %}
+
+</body>
+</html>
