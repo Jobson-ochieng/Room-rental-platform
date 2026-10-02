@@ -17,18 +17,7 @@ Including another URLconf
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.urls import path,include
-from students import views
 urlpatterns = [
-    path('',views.home),
     path('',include('mySchool.urls')),
     path('admin/', admin.site.urls),
-    path('about/',views.about),
-    path('students/',views.students_list,name='students_list'),
-    path('students/add/',views.students_create,name='students_create'),
-    path('students/<int:id>/edit/',views.student_update,name='student_update'),
-    path('students/<int:id>/delete/',views.students_delete,name='students_delete'),
-    path('login/',auth_views.LoginView.as_view(template_name='registration/login.html'),name='login'),
-    path('logout/',auth_views.LogoutView.as_view(),name='logout'),
-    path('register/',views.register,name='register'),
-    path('hello/',views.HelloView.as_view())
-]
+  ]
