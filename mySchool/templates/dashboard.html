@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+    <h1>My Dashboard</h1>
+    {% for role in roles %}
+        <p>Your role: {{ role.role }}</p>
+        {% if role.role=="OWNER" %}
+          <a href="{% url 'create-hostel' %}">create hostel</a>
+        {% endfor %}
+    {% endfor %}
+
+
+    <h2>My Hostels</h2>
+
+    {% for hostel in hostels %}
+        <h3>{{ hostel.name }}</h3>
+
+        <p>Location: {{ hostel.location }}</p>
+
+        <p>{{ hostel.description }}</p>
+
+        <p>Phone: {{ hostel.phone_number }}</p>
+
+        <p>Email: {{ hostel.email }}</p>
+
+    {% empty %}
+        <p>You have not created a hostel yet.</p>
+    {% endfor %}
+
+</body>
+</html>

@@ -1,7 +1,13 @@
-from .models import Tenant
 from django import forms
-class TenantForm(forms.ModelForm):
- class Meta:
-  model=Tenant
-  fields=["phone","name","room"]
+from .models import Hostel,Room
 
+
+class HostelForm(forms.ModelForm):
+    class Meta:
+        model = Hostel
+        fields = ["name","location","description","phone_number","email"]
+
+class RoomForm(forms.ModelForm):
+    class Meta:
+     model=Roomo
+     fields = ["room_number","capacity"]

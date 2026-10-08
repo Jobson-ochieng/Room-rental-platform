@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Hostel</title>
+</head>
+
+<body>
+
+    <h1>Create Hostel</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button type="submit">Create Hostel</button>
+
+    </form>
+
+</body>
+</html>
