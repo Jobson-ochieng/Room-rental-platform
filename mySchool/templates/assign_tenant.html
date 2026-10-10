@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Tenant</title>
+</head>
+<body>
+
+    <h1>Assign Tenant to Room</h1>
+
+    <h2>Room {{ room.room_number }}</h2>
+
+    <p>
+        Hostel: {{ room.hostel.name }}
+    </p>
+
+    <p>
+        Capacity: {{ room.capacity }}
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Assign Tenant</button>
+    </form>
+
+    <p>
+        <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+    </p>
+
+</body>
+</html>

@@ -1,38 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 </head>
-
 <body>
+
     <form method="POST" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
-    <h1>My Dashboard</h1>
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    <h1>Main Dashboard</h1>
+
     {% for role in roles %}
         <p>Your role: {{ role.role }}</p>
-        {% if role.role=="OWNER" %}
-          <a href="{% url 'create-hostel' %}">create hostel</a>
-        {% endfor %}
+
+        {% if role.role == "OWNER" %}
+            <a href="{% url 'create_hostel' %}">Create Hostel</a>
+        {% endif %}
     {% endfor %}
 
-
-    <h2>My Hostels</h2>
+    <h2>Hostels</h2>
 
     {% for hostel in hostels %}
+
         <h3>{{ hostel.name }}</h3>
 
         <p>Location: {{ hostel.location }}</p>
-
         <p>{{ hostel.description }}</p>
-
         <p>Phone: {{ hostel.phone_number }}</p>
-
         <p>Email: {{ hostel.email }}</p>
 
+        {% if request.user == hostel.owner %}
+            <a href="{% url 'create_room' hostel.id %}">Add Room</a>
+        {% endif %}
+
+        <h4>Rooms</h4>
+
+        {% for room in hostel.room_set.all %}
+
+            <p>Room: {{ room.room_number }}</p> 
+            <p>occupancy: {{room.active_tenant_count}}</p>
+
+            <h5>Assigned Tenants</h5>
+            
+            <h5>Assigned Tenants</h5>
+
+            {% for tenancy in room.tenancies.all %}
+             {% if tenancy.is_active %}
+              <p>{{ tenancy.tenant.user.username }}</p>
+              {% if request.user == hostel.owner %}
+               <form method="POST" action="{% url 'end_tenancy' tenancy.id %}">
+                {% csrf_token %}
+                <button type="submit">End Tenancy</button>
+               </form>
+              {% endif %}
+             {% endif %}
+             {% empty %}
+             <p>No tenant records found for this room.</p>
+            {% endfor %}    
+                {% if room.is_occupied %}
+                    Occupied
+                {% else %}
+                    Available
+                {% endif %}
+            </p>
+
+            {% if request.user == hostel.owner %}
+                <a href="{% url 'edit_room' room.id %}">Edit Room</a>
+                <a href="{% url 'assign_tenant' room.id %}">Assign Tenant</a>
+            {% endif %}
+
+        {% empty %}
+            <p>No rooms have been added to this hostel yet.</p>
+        {% endfor %}
+
     {% empty %}
-        <p>You have not created a hostel yet.</p>
+        <p>No hostels are available yet.</p>
     {% endfor %}
 
 </body>

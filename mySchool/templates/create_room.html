@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Room</title>
+</head>
+
+<body>
+
+    <h1>Add Room to {{ hostel.name }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Create Room</button>
+    </form>
+
+</body>
+</html>
