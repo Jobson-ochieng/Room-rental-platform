@@ -10,7 +10,7 @@ class HostelForm(forms.ModelForm):
 class RoomForm(forms.ModelForm):
     class Meta:
      model=Room
-     fields = ["room_number","capacity"]
+     fields = ["room_number","capacity","monthly_rent"]
 
 class TenancyForm(forms.ModelForm):
     tenant = forms.ModelChoiceField(queryset=UserProfile.objects.filter(role="TENANT"),label="Select Tenant")

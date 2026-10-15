@@ -18,7 +18,16 @@
     <p>
         Capacity: {{ room.capacity }}
     </p>
-
+    {% if room_is_full %}
+     <h2>Room Full</h2>
+     <p>
+        Room {{ room.room_number }} has reached its maximum
+        capacity of {{ room.capacity }} tenants.
+     </p>
+     <a href="{% url 'dashboard' %}">Return to Dashboard</a>
+    {% else %}
+     <h2>Assign Tenant to Room {{ room.room_number }}</h2>
+    {% endif %}
     <form method="POST">
         {% csrf_token %}
 

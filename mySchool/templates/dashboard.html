@@ -7,79 +7,100 @@
 </head>
 <body>
 
-    <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
+   <h1>Main Dashboard</h1>
 
-    <h1>Main Dashboard</h1>
+<p>Your role: {{ profile.get_role_display }}</p>
 
-    {% for role in roles %}
-        <p>Your role: {{ role.role }}</p>
+<a href="{% url 'logout' %}">Logout</a>
 
-        {% if role.role == "OWNER" %}
-            <a href="{% url 'create_hostel' %}">Create Hostel</a>
-        {% endif %}
-    {% endfor %}
+{% if profile.role == "OWNER" %}
 
-    <h2>Hostels</h2>
+    <h2>Your Hostels</h2>
+
+    <a href="{% url 'create_hostel' %}">Create Hostel</a>
 
     {% for hostel in hostels %}
+        <hr>
 
         <h3>{{ hostel.name }}</h3>
-
         <p>Location: {{ hostel.location }}</p>
         <p>{{ hostel.description }}</p>
         <p>Phone: {{ hostel.phone_number }}</p>
         <p>Email: {{ hostel.email }}</p>
 
-        {% if request.user == hostel.owner %}
-            <a href="{% url 'create_room' hostel.id %}">Add Room</a>
-        {% endif %}
+        <a href="{% url 'create_room' hostel.id %}">
+            Add Room
+        </a>
 
         <h4>Rooms</h4>
 
         {% for room in hostel.room_set.all %}
+            <p>Room: {{ room.room_number }}</p>
+            <p>Capacity: {{ room.capacity }}</p>
+            <p>Monthly rent per tenant: KSh {{ room.monthly_rent }}</p>
+            <p>
+                Active tenants:
+                {{ room.active_tenant_count }} / {{ room.capacity }}
+            </p>
+            <p>Available spaces: {{ room.available_spaces }}</p>
+            <p>Status: {{ room.occupancy_status }}</p>
 
-            <p>Room: {{ room.room_number }}</p> 
-            <p>occupancy: {{room.active_tenant_count}}</p>
-
-            <h5>Assigned Tenants</h5>
-            
             <h5>Assigned Tenants</h5>
 
             {% for tenancy in room.tenancies.all %}
-             {% if tenancy.is_active %}
-              <p>{{ tenancy.tenant.user.username }}</p>
-              {% if request.user == hostel.owner %}
-               <form method="POST" action="{% url 'end_tenancy' tenancy.id %}">
-                {% csrf_token %}
-                <button type="submit">End Tenancy</button>
-               </form>
-              {% endif %}
-             {% endif %}
-             {% empty %}
-             <p>No tenant records found for this room.</p>
-            {% endfor %}    
-                {% if room.is_occupied %}
-                    Occupied
-                {% else %}
-                    Available
+                {% if tenancy.is_active %}
+                    <p>{{ tenancy.tenant.user.username }}</p>
+
+                    <form
+                        method="post"
+                        action="{% url 'end_tenancy' tenancy.id %}"
+                    >
+                        {% csrf_token %}
+                        <button type="submit">End Tenancy</button>
+                    </form>
                 {% endif %}
-            </p>
+            {% empty %}
+                <p>No tenant records found for this room.</p>
+            {% endfor %}
 
-            {% if request.user == hostel.owner %}
-                <a href="{% url 'edit_room' room.id %}">Edit Room</a>
-                <a href="{% url 'assign_tenant' room.id %}">Assign Tenant</a>
-            {% endif %}
+            <a href="{% url 'edit_room' room.id %}">
+                Edit Room
+            </a>
 
+            <a href="{% url 'assign_tenant' room.id %}">
+                Assign Tenants
+            </a>
+
+            <hr>
         {% empty %}
-            <p>No rooms have been added to this hostel yet.</p>
+            <p>No rooms have been added yet.</p>
         {% endfor %}
 
     {% empty %}
-        <p>No hostels are available yet.</p>
+        <p>You haven't created any hostels yet.</p>
     {% endfor %}
 
+{% elif profile.role == "TENANT" %}
+
+    <h2>My Accommodation</h2>
+
+    {% for tenancy in tenancies %}
+        <hr>
+
+        <h3>{{ tenancy.room.hostel.name }}</h3>
+
+        <p>Hostel location: {{ tenancy.room.hostel.location }}</p>
+        <p>Room number: {{ tenancy.room.room_number }}</p>
+        <p>Tenancy started: {{ tenancy.start_date }}</p>
+        <p>Status: Active</p>
+
+    {% empty %}
+        <p>
+            You don't currently have an active room assignment.
+            Please contact your hostel owner.
+        </p>
+    {% endfor %}
+
+{% endif %}
 </body>
 </html>
